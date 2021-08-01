@@ -1,0 +1,31 @@
+image:
+  name: bp-webservice-gateway
+  version: latest
+port: 8080
+service:
+  type: ClusterIP
+  port: 8080
+replicas: 1
+appConfigMountPath: "/app/config/main"
+trembitaBusinessProcessesConfigMountPath: "/app/config/trembita-business-processes"
+trembitaInvokerKeycloakClientSecretsMountPath: "/app/secrets/trembita-invoker-client"
+cephSecretMountPath: "/app/secrets/ceph"
+cephSecretMountPath: "/app/secrets/ceph"
+readinessPath: "/ws/bpWebservice.wsdl"
+livenessPath: "/actuator/health/liveness"
+
+ingress: # expose the service with a route or an ingress depending on platform type
+  platform: openshift # openshift or kubernetes
+
+keycloak:
+  trembitaInvokerClient:
+    clientName: trembita-invoker
+    secretName: keycloak-trembita-invoker-client-secret
+    realm: external-system
+
+ceph:
+  bucketName: lowcode-form-data-storage
+
+bpmsUrl: http://bpms:8080
+dsoURL: http://digital-signature-ops:8080
+zipkinBaseUrl: http://zipkin.istio-system:9411

@@ -1,0 +1,8 @@
+{
+  "data": {
+    "var3": null,
+    "var2": "value2",
+    "var1": "value1"
+  },
+  "x-access-token": "token"
+}

@@ -1,0 +1,15 @@
+{
+  "variables": {
+    "start_form_ceph_key": {
+      "type": null,
+      "value": "lowcode_happyPathBusinessProcess_start_form_.+",
+      "valueInfo": null
+    }
+  },
+  "businessKey": null,
+  "caseInstanceId": null,
+  "startInstructions": null,
+  "skipCustomListeners": false,
+  "skipIoMappings": false,
+  "withVariablesInReturn": true
+}

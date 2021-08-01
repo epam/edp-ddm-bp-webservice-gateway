@@ -1,0 +1,15 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:bp="https://gitbud.epam.com/mdtu-ddm/low-code-platform/platform/backend/applications/bp-webservice-gateway">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <bp:startBpRequest>
+      <businessProcessDefinitionKey>bpmsError</businessProcessDefinitionKey>
+      <startVariables>
+        <entry>
+          <key>var1</key>
+          <value>value1</value>
+        </entry>
+      </startVariables>
+    </bp:startBpRequest>
+  </soapenv:Body>
+</soapenv:Envelope>

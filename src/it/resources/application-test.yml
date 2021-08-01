@@ -1,0 +1,44 @@
+trembita:
+  process_definitions:
+    - process_definition_id: 'happyPathBusinessProcess'
+      start_vars:
+        - var1
+        - var2
+        - var3
+      return_vars:
+        - return_var_1
+        - return_var_2
+    - process_definition_id: 'missedRequiredBpInputParameter'
+      start_vars:
+        - present_var
+        - missed_var
+    - process_definition_id: 'dsoError'
+      start_vars:
+        - var1
+      requires_signature: true
+    - process_definition_id: 'keycloakError'
+      start_vars:
+        - var1
+      requires_signature: true
+    - process_definition_id: 'cephError'
+    - process_definition_id: 'bpmsError'
+      start_vars:
+        - var1
+
+dso:
+  url: http://localhost:8081
+
+keycloak:
+  url: http://localhost:8082/auth
+  realm: test-realm
+  client-id: client-id
+  client-secret: client-secret
+
+ceph:
+  http-endpoint: http://localhost:8083
+  access-key: access-key
+  secret-key: secret-key
+  bucket: bucket
+
+bpms:
+  url: http://localhost:8084

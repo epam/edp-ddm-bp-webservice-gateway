@@ -1,0 +1,14 @@
+{
+  "variables": {
+    "return_var_1": {
+      "type": null,
+      "value": "return_value_1",
+      "valueInfo": null
+    },
+    "return_var_3": {
+      "type": null,
+      "value": "return_value_3",
+      "valueInfo": null
+    }
+  }
+}

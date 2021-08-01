@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.epam.digital.data.platform</groupId>
+    <artifactId>low-code-platform-parent</artifactId>
+    <version>1.3.0-SNAPSHOT</version>
+    <relativePath/>
+  </parent>
+
+  <artifactId>bp-webservice-gateway</artifactId>
+  <version>1.3.0-SNAPSHOT</version>
+
+  <properties>
+    <jaxb-runtime.version>2.3.2</jaxb-runtime.version>
+
+    <keycloak-admin-client.version>13.0.1</keycloak-admin-client.version>
+
+    <ddm-starter-logger.version>1.3.0-SNAPSHOT</ddm-starter-logger.version>
+    <digital-signature-ops-client.version>1.3.0-SNAPSHOT</digital-signature-ops-client.version>
+    <ddm-ceph-client.version>1.3.0-SNAPSHOT</ddm-ceph-client.version>
+    <bpm.api.version>1.3.0-SNAPSHOT</bpm.api.version>
+
+    <!-- This property is set by jacoco and used in the surefire config
+			Set it to empty to avoid JVM startup error related to "@{argLine}" when run without jacoco -->
+    <argLine/>
+
+    <sonar.coverage.exclusions>
+      **/com/epam/digital/data/platform/bpwebservice/dto/**/*,
+      **/BpWebserviceGatewayApplication.java
+    </sonar.coverage.exclusions>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web-services</artifactId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-cloud-starter-kubernetes-config</artifactId>
+      <groupId>org.springframework.cloud</groupId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-sleuth</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-zipkin</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>wsdl4j</groupId>
+      <artifactId>wsdl4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+      <version>${jaxb-runtime.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-admin-client</artifactId>
+      <version>${keycloak-admin-client.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.epam.digital.data.platform</groupId>
+      <artifactId>ddm-starter-logger</artifactId>
+      <version>${ddm-starter-logger.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.epam.digital.data.platform</groupId>
+      <artifactId>digital-signature-ops-client</artifactId>
+      <version>${digital-signature-ops-client.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.epam.digital.data.platform</groupId>
+      <artifactId>ddm-ceph-client</artifactId>
+      <version>${ddm-ceph-client.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.epam.digital.data.platform</groupId>
+      <artifactId>business-process-management-client</artifactId>
+      <version>${bpm.api.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <artifactId>wiremock</artifactId>
+      <groupId>com.github.tomakehurst</groupId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.ws</groupId>
+      <artifactId>spring-ws-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <dependencies>
+          <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+          </dependency>
+        </dependencies>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <id>schemagen</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>schemagen</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <sources>
+            <source>
+              ${basedir}/src/main/java/com/epam/digital/data/platform/bpwebservice/dto
+            </source>
+            <source>
+              ${basedir}/src/main/java/com/epam/digital/data/platform/bpwebservice/dto/factory
+            </source>
+          </sources>
+          <outputDirectory>${project.build.directory}/classes</outputDirectory>
+          <transformSchemas>
+            <transformSchema>
+              <uri>
+                https://gitbud.epam.com/mdtu-ddm/low-code-platform/platform/backend/applications/bp-webservice-gateway
+              </uri>
+              <toPrefix>bpws</toPrefix>
+              <toFile>bp-webservice.xsd</toFile>
+            </transformSchema>
+          </transformSchemas>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <!-- This maven profile will use spring local profile for test running.
+      For running test from IDE it's needed to add `-Dspring.profiles.active=local`
+      for test explicitly -->
+      <id>local</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <argLine>@{argLine} -Dspring.profiles.active=local</argLine>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <configuration>
+              <argLine>@{argLine} -Dspring.profiles.active=local</argLine>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

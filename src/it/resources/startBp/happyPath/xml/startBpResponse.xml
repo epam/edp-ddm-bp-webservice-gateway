@@ -1,0 +1,17 @@
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+  <SOAP-ENV:Header/>
+  <SOAP-ENV:Body>
+    <ns3:startBpResponse
+      xmlns:ns3="https://gitbud.epam.com/mdtu-ddm/low-code-platform/platform/backend/applications/bp-webservice-gateway">
+      <resultVariables>
+        <entry>
+          <key>return_var_1</key>
+          <value>return_value_1</value>
+        </entry>
+        <entry>
+          <key>return_var_2</key>
+        </entry>
+      </resultVariables>
+    </ns3:startBpResponse>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

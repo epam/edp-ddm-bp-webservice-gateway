@@ -1,0 +1,28 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:bp="https://gitbud.epam.com/mdtu-ddm/low-code-platform/platform/backend/applications/bp-webservice-gateway">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <bp:startBpRequest>
+      <businessProcessDefinitionKey>happyPathBusinessProcess</businessProcessDefinitionKey>
+      <startVariables>
+        <!--Zero or more repetitions:-->
+        <entry>
+          <!--Optional:-->
+          <key>var1</key>
+          <!--Optional:-->
+          <value>value1</value>
+        </entry>
+        <entry>
+          <!--Optional:-->
+          <key>var2</key>
+          <!--Optional:-->
+          <value>value2</value>
+        </entry>
+        <entry>
+          <!--Optional:-->
+          <key>var3</key>
+        </entry>
+      </startVariables>
+    </bp:startBpRequest>
+  </soapenv:Body>
+</soapenv:Envelope>

@@ -1,0 +1,9 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:bp="https://gitbud.epam.com/mdtu-ddm/low-code-platform/platform/backend/applications/bp-webservice-gateway">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <bp:startBpRequest>
+      <businessProcessDefinitionKey>cephError</businessProcessDefinitionKey>
+    </bp:startBpRequest>
+  </soapenv:Body>
+</soapenv:Envelope>

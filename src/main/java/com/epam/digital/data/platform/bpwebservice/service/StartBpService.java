@@ -17,7 +17,7 @@ import com.epam.digital.data.platform.dso.api.dto.SignRequestDto;
 import com.epam.digital.data.platform.dso.client.DigitalSealRestClient;
 import com.epam.digital.data.platform.dso.client.exception.BaseException;
 import com.epam.digital.data.platform.integration.ceph.dto.FormDataDto;
-import com.epam.digital.data.platform.integration.ceph.exception.CephCommuncationException;
+import com.epam.digital.data.platform.integration.ceph.exception.CephCommunicationException;
 import com.epam.digital.data.platform.integration.ceph.exception.MisconfigurationException;
 import com.epam.digital.data.platform.integration.ceph.service.FormDataCephService;
 import com.epam.digital.data.platform.starter.errorhandling.exception.SystemException;
@@ -183,7 +183,7 @@ public class StartBpService {
         .build();
     try {
       formDataCephService.putFormData(cephKey, formData);
-    } catch (MisconfigurationException | CephCommuncationException e) {
+    } catch (MisconfigurationException | CephCommunicationException e) {
       log.error("Faced ceph error", e);
       throw new CephConnectionException(e);
     }

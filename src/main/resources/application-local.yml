@@ -3,39 +3,22 @@ trembita:
     - process_definition_id: 'add-lab'
       start_vars:
         - var1
-      requiresSignature: true
-    - process_definition_id: 'Process_1vkukh5'
-      start_vars:
-        - var1
-      return_vars:
-        - result_var_1
-      requiresSignature: true
-    - process_definition_id: 'get-lab-accreditation-info'
-      start_vars:
-        - name
-        - edrpou
-      return_vars:
-        - laboratoryId
-        - edrpou
-        - accreditationFlag
-        - name
-        - accreditationEndDate
-      requiresSignature: true
+      requires_signature: true
 
 dso:
-  url: https://dig-sign-ops-lowcode-dev-dev.apps.cicd2.mdtu-ddm.projects.epam.com
+  url: http://localhost:8081
 
 keycloak:
-  url: https://platform-keycloak.apps.cicd2.mdtu-ddm.projects.epam.com/auth
-  realm: mdtu-ddm-edp-cicd-lowcode-dev-dev-officer-portal
-  client-id: bp-webservice-gateway
-  client-secret: b0ba6ba3-babb-4ba5-a929-8c3d3fd025ca
+  url: http://localhost:8082/auth
+  realm: test-realm
+  client-id: client-id
+  client-secret: client-secret
 
 ceph:
-  http-endpoint: https://s3-openshift-storage.apps.cicd2.mdtu-ddm.projects.epam.com
-  access-key: DqzKHsI8GrPDfab4YUtI
-  secret-key: OFpTD5UqWetxj7PRRKSn0yy0FjlHSfTX4IlcQ1k9
-  bucket: backend-ceph-bucket-ba78da40-7003-4113-a8b2-42ed04ce0288
+  http-endpoint: http://localhost:8083
+  access-key: access-key
+  secret-key: secret-key
+  bucket: bucket
 
 bpms:
-  url: https://bpms-lowcode-dev-dev.apps.cicd2.mdtu-ddm.projects.epam.com
+  url: http://localhost:8084

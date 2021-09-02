@@ -4,3 +4,29 @@ server:
 platform:
   security:
     enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+      group:
+        liveness:
+          include: livenessState
+        readiness:
+          include: readinessState, webServices
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+    kafka:
+      enabled: false
+    webservices:
+      readiness:
+        services:
+          - ${bpms.url}/actuator/health

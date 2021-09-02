@@ -11,7 +11,7 @@ trembitaBusinessProcessesConfigMountPath: "/app/config/trembita-business-process
 trembitaInvokerKeycloakClientSecretsMountPath: "/app/secrets/trembita-invoker-client"
 cephSecretMountPath: "/app/secrets/ceph"
 cephSecretMountPath: "/app/secrets/ceph"
-readinessPath: "/ws/bpWebservice.wsdl"
+readinessPath: "/actuator/health/readiness"
 livenessPath: "/actuator/health/liveness"
 
 ingress: # expose the service with a route or an ingress depending on platform type

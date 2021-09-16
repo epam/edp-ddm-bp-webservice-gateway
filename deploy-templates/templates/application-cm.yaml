@@ -11,3 +11,6 @@ data:
     keycloak.client-id: {{ .Values.keycloak.trembitaInvokerClient.clientName }}
     ceph.http-endpoint: {{ .Values.ceph.host }}
     spring.zipkin.baseUrl: {{ .Values.zipkinBaseUrl }}
+    {{- if eq .Values.deployProfile "dev" }}
+    management.endpoints.web.exposure.include: '*'
+    {{- end }}

@@ -88,6 +88,8 @@ public class StartBpService {
    */
   public StartBpResponse startBp(StartBpRequest startBpRequest) {
     var bpDefinitionKey = startBpRequest.getBusinessProcessDefinitionKey();
+    log.info("Executing process {}", bpDefinitionKey);
+
     var bpProperties = getBusinessProcessProperties(bpDefinitionKey);
     var bpInputParameters = getBusinessProcessInputParameters(startBpRequest, bpProperties);
     var signature = bpProperties.isRequiresSignature() ?
@@ -98,6 +100,7 @@ public class StartBpService {
 
     var startBpResponse = new StartBpResponse();
     startBpResponse.setResultVariables(bpOutputParameters);
+    log.info("Process {} finished", bpDefinitionKey);
     return startBpResponse;
   }
 
@@ -107,12 +110,13 @@ public class StartBpService {
    * @throws NoSuchBusinessProcessDefinedException if no bp is defined in application properties
    */
   private BusinessProcessProperties getBusinessProcessProperties(String bpDefinitionKey) {
+    log.debug("Trying to find business process {} in trembita.process_definitions - {}",
+        bpDefinitionKey, businessProcessProperties);
     var bpProperties = businessProcessProperties.findBusinessProcessProperties(bpDefinitionKey);
 
     if (Objects.isNull(bpProperties)) {
-      log.info(String.format(
-          "No such business process %s is defined in trembita.process_definitions",
-          bpDefinitionKey));
+      log.info("No such business process {} is defined in trembita.process_definitions",
+          bpDefinitionKey);
       throw new NoSuchBusinessProcessDefinedException();
     }
     return bpProperties;
@@ -127,6 +131,8 @@ public class StartBpService {
    */
   private Map<String, String> getBusinessProcessInputParameters(StartBpRequest startBpRequest,
       BusinessProcessProperties bpProperties) {
+    var bpDefinitionKey = startBpRequest.getBusinessProcessDefinitionKey();
+    log.debug("Getting business process {} input parameters", bpDefinitionKey);
     if (Objects.isNull(bpProperties.getStartVars())) {
       return Collections.emptyMap();
     }
@@ -136,12 +142,12 @@ public class StartBpService {
 
     bpProperties.getStartVars().forEach(startVar -> {
       if (Objects.isNull(requestStartVars) || !requestStartVars.containsKey(startVar)) {
-        log.info(String.format("No such input param %s is defined in request for %s",
-            startVar, startBpRequest.getBusinessProcessDefinitionKey()));
+        log.info("No such input param {} is defined in request for {}", startVar, bpDefinitionKey);
         throw new MissedRequiredBusinessProcessInputParameterException();
       }
       bpInputParameters.put(startVar, startBpRequest.getStartVariables().get(startVar));
     });
+    log.debug("Founded params for {} - {}", bpDefinitionKey, bpInputParameters);
     return Collections.unmodifiableMap(bpInputParameters);
   }
 
@@ -151,10 +157,12 @@ public class StartBpService {
    * @throws DsoSignatureException in case of facing dso or json processing exception
    */
   private String getInputParamsDigitalSignature(Map<String, String> bpInputParameters) {
+    log.debug("Signing input params with system signature - {}", bpInputParameters);
     try {
       var data = objectMapper.writeValueAsString(bpInputParameters);
       var signRequestDto = SignRequestDto.builder().data(data).build();
       var signResponse = digitalSealRestClient.sign(signRequestDto);
+      log.debug("Input params were signed. Signature - {}", signResponse.getSignature());
       return signResponse.getSignature();
     } catch (JsonProcessingException | BaseException e) {
       log.error("Faced dso error", e);
@@ -173,6 +181,7 @@ public class StartBpService {
    */
   private String putInputParamsToCeph(String bpDefinitionKey, Map<String, String> bpInputParameters,
       String signature) {
+    log.debug("Saving input parameters for {} to Ceph - {}", bpDefinitionKey, bpInputParameters);
     var uuid = UUID.randomUUID().toString();
     var cephKey = cephKeyProvider.generateStartFormKey(bpDefinitionKey, uuid);
 
@@ -187,6 +196,7 @@ public class StartBpService {
       log.error("Faced ceph error", e);
       throw new CephConnectionException(e);
     }
+    log.debug("Input parameters for {} saved in Ceph", bpDefinitionKey);
     return cephKey;
   }
 
@@ -200,6 +210,7 @@ public class StartBpService {
    */
   private ProcessInstanceWithVariablesDto startProcessInstance(String bpDefinitionKey,
       String startFormKey) {
+    log.debug("Starting {} process instance", bpDefinitionKey);
     var startProcessInstanceDto = new StartProcessInstanceDto();
     var variableValueDto = new VariableValueDto();
     variableValueDto.setValue(startFormKey);

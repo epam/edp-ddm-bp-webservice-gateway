@@ -4,6 +4,11 @@ server:
 platform:
   security:
     enabled: false
+  logging:
+    aspect:
+      enabled: false
+    primary-url:
+      enabled: true
 
 management:
   endpoints:
@@ -39,3 +44,13 @@ spring:
       client:
         health-indicator:
           enabled: false
+
+logbook:
+  feign:
+    enabled: true
+  info-logging:
+    enabled: true
+  strategy: request-body-on-debug
+  obfuscate:
+    headers:
+      - x-access-token

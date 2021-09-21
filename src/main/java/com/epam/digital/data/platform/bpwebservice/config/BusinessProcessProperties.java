@@ -3,6 +3,7 @@ package com.epam.digital.data.platform.bpwebservice.config;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Class that represents business process properties that are defined in application properties with
@@ -12,6 +13,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ToString
 public class BusinessProcessProperties {
 
   private String processDefinitionId;

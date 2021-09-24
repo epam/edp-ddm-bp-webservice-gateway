@@ -29,3 +29,5 @@ ceph:
 bpmsUrl: http://bpms:8080
 dsoURL: http://digital-signature-ops:8080
 zipkinBaseUrl: http://zipkin.istio-system:9411
+
+deployProfile: prod

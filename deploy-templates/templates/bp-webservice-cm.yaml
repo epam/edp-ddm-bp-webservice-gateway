@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ .Chart.Name }}-trembita-business-processes
-data:
-  trembita-business-processes.yml: |-

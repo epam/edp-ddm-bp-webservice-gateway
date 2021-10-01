@@ -51,6 +51,8 @@ logbook:
   info-logging:
     enabled: true
   strategy: request-body-on-debug
+  exclude:
+    - /actuator/**
   obfuscate:
     headers:
       - x-access-token

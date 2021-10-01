@@ -31,3 +31,5 @@ dsoURL: http://digital-signature-ops:8080
 zipkinBaseUrl: http://zipkin.istio-system:9411
 
 deployProfile: prod
+
+javaOpts: "-Xms512m -Xmx512m"

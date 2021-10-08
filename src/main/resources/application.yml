@@ -23,7 +23,7 @@ management:
         liveness:
           include: livenessState
         readiness:
-          include: readinessState, webServices
+          include: readinessState
   health:
     livenessstate:
       enabled: true
@@ -33,10 +33,6 @@ management:
       enabled: false
     kubernetes:
       enabled: false
-    webservices:
-      readiness:
-        services:
-          - ${bpms.url}/actuator/health/readiness
 
 spring:
   cloud:

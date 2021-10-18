@@ -25,6 +25,7 @@ keycloak:
 
 ceph:
   bucketName: lowcode-form-data-storage
+  host: ${CEPH_BUCKET_HOST}
 
 bpmsUrl: http://bpms:8080
 dsoURL: http://digital-signature-ops:8080

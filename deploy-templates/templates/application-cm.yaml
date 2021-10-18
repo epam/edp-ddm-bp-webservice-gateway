@@ -9,5 +9,5 @@ data:
     keycloak.url: {{ template "keycloak.url" . }}/auth
     keycloak.realm: {{ template "keycloak.externalSystemTargetRealm" . }}
     keycloak.client-id: {{ .Values.keycloak.trembitaInvokerClient.clientName }}
-    ceph.http-endpoint: http://s3.openshift-storage.svc.cluster.local
+    ceph.http-endpoint: {{ .Values.ceph.host }}
     spring.zipkin.baseUrl: {{ .Values.zipkinBaseUrl }}

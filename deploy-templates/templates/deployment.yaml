@@ -52,6 +52,11 @@ spec:
             cpu: 500m
             memory: 768Mi
         env:
+          - name: CEPH_BUCKET_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Values.ceph.bucketName }}
+                key: BUCKET_HOST
           - name: ceph.bucket
             valueFrom:
               configMapKeyRef:

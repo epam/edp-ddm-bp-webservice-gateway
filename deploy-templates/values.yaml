@@ -1,3 +1,6 @@
+global:
+  disableRequestsLimits: false
+
 image:
   name: bp-webservice-gateway
   version: latest
@@ -9,7 +12,6 @@ replicas: 1
 appConfigMountPath: "/app/config/main"
 trembitaBusinessProcessesConfigMountPath: "/app/config/trembita-business-processes"
 trembitaInvokerKeycloakClientSecretsMountPath: "/app/secrets/trembita-invoker-client"
-cephSecretMountPath: "/app/secrets/ceph"
 cephSecretMountPath: "/app/secrets/ceph"
 readinessPath: "/actuator/health/readiness"
 livenessPath: "/actuator/health/liveness"

@@ -13,6 +13,7 @@ import com.epam.digital.data.platform.bpwebservice.exception.MissedRequiredBusin
 import com.epam.digital.data.platform.bpwebservice.exception.NoSuchBusinessProcessDefinedException;
 import com.epam.digital.data.platform.bpwebservice.util.AccessTokenProvider;
 import com.epam.digital.data.platform.bpwebservice.util.CephKeyProvider;
+import com.epam.digital.data.platform.dataaccessor.sysvar.StartFormCephKeyVariable;
 import com.epam.digital.data.platform.dso.api.dto.SignRequestDto;
 import com.epam.digital.data.platform.dso.client.DigitalSealRestClient;
 import com.epam.digital.data.platform.dso.client.exception.BaseException;
@@ -44,8 +45,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class StartBpService {
-
-  private static final String START_FORM_CEPH_KEY = "start_form_ceph_key";
 
   private final TrembitaBusinessProcessProperties businessProcessProperties;
 
@@ -214,7 +213,8 @@ public class StartBpService {
     var startProcessInstanceDto = new StartProcessInstanceDto();
     var variableValueDto = new VariableValueDto();
     variableValueDto.setValue(startFormKey);
-    startProcessInstanceDto.setVariables(Map.of(START_FORM_CEPH_KEY, variableValueDto));
+    startProcessInstanceDto.setVariables(
+        Map.of(StartFormCephKeyVariable.START_FORM_CEPH_KEY_VARIABLE_NAME, variableValueDto));
     startProcessInstanceDto.setWithVariablesInReturn(true);
     try {
       return processDefinitionRestClient

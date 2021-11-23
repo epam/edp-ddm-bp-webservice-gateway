@@ -37,15 +37,16 @@ Available properties are following:
 ### Local development
 
 1. Run spring boot application using 'local' profile:
-  * `mvn spring-boot:run -Drun.profiles=local` OR using appropriate functions of your IDE;
-  * `application-local.yml` is configuration file for local development.
+
+* `mvn spring-boot:run -Drun.profiles=local` OR using appropriate functions of your IDE;
+* `application-local.yml` is configuration file for local development.
 
 ### Test execution
 
 * Tests could be run via maven command:
-  * `mvn verify` OR using appropriate functions of your IDE.
-  
+    * `mvn verify` OR using appropriate functions of your IDE.
+
 ### License
 
-The bp-webservices-gateway is released under version 2.0 of
-the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
+The bp-webservices-gateway is Open Source software released under
+the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0).

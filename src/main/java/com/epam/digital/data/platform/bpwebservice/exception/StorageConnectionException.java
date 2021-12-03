@@ -20,17 +20,17 @@ import org.springframework.ws.soap.server.endpoint.annotation.FaultCode;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapFault;
 
 /**
- * Exception that should be thrown when application faced any Ceph related errors.
+ * Exception that should be thrown when application faced any storage related errors.
  * <p>
  * Is mapped to a soap fault with code SERVER
  */
 @SoapFault(
     faultCode = FaultCode.SERVER,
-    faultStringOrReason = "Ceph connection runtime error"
+    faultStringOrReason = "Storage connection runtime error"
 )
-public class CephConnectionException extends RuntimeException {
+public class StorageConnectionException extends RuntimeException {
 
-  public CephConnectionException(Throwable cause) {
+  public StorageConnectionException(Throwable cause) {
     super(cause);
   }
 

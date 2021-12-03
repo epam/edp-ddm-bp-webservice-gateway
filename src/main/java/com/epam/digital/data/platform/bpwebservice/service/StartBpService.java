@@ -22,23 +22,22 @@ import com.epam.digital.data.platform.bpwebservice.config.TrembitaBusinessProces
 import com.epam.digital.data.platform.bpwebservice.dto.StartBpRequest;
 import com.epam.digital.data.platform.bpwebservice.dto.StartBpResponse;
 import com.epam.digital.data.platform.bpwebservice.exception.BpmsConnectionException;
-import com.epam.digital.data.platform.bpwebservice.exception.CephConnectionException;
 import com.epam.digital.data.platform.bpwebservice.exception.DsoSignatureException;
 import com.epam.digital.data.platform.bpwebservice.exception.KeycloakAuthException;
 import com.epam.digital.data.platform.bpwebservice.exception.MissedRequiredBusinessProcessInputParameterException;
 import com.epam.digital.data.platform.bpwebservice.exception.NoSuchBusinessProcessDefinedException;
+import com.epam.digital.data.platform.bpwebservice.exception.StorageConnectionException;
 import com.epam.digital.data.platform.bpwebservice.util.AccessTokenProvider;
-import com.epam.digital.data.platform.bpwebservice.util.CephKeyProvider;
 import com.epam.digital.data.platform.dataaccessor.sysvar.StartFormCephKeyVariable;
 import com.epam.digital.data.platform.dso.api.dto.SignRequestDto;
 import com.epam.digital.data.platform.dso.client.DigitalSealRestClient;
 import com.epam.digital.data.platform.dso.client.exception.BaseException;
-import com.epam.digital.data.platform.integration.ceph.dto.FormDataDto;
-import com.epam.digital.data.platform.integration.ceph.exception.CephCommunicationException;
-import com.epam.digital.data.platform.integration.ceph.exception.MisconfigurationException;
-import com.epam.digital.data.platform.integration.ceph.service.FormDataCephService;
 import com.epam.digital.data.platform.starter.errorhandling.exception.SystemException;
 import com.epam.digital.data.platform.starter.errorhandling.exception.ValidationException;
+import com.epam.digital.data.platform.storage.base.exception.RepositoryCommunicationException;
+import com.epam.digital.data.platform.storage.base.exception.RepositoryMisconfigurationException;
+import com.epam.digital.data.platform.storage.form.dto.FormDataDto;
+import com.epam.digital.data.platform.storage.form.service.FormDataStorageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
@@ -66,9 +65,8 @@ public class StartBpService {
 
   private final DigitalSealRestClient digitalSealRestClient;
   private final ObjectMapper objectMapper;
-  private final FormDataCephService formDataCephService;
+  private final FormDataStorageService formDataStorageService;
   private final AccessTokenProvider accessTokenProvider;
-  private final CephKeyProvider cephKeyProvider;
   private final ProcessDefinitionRestClient processDefinitionRestClient;
 
   /**
@@ -80,7 +78,7 @@ public class StartBpService {
    * <li>Sign <i>required business process start vars</i> with system key if it's required ({@code trembita.process_definitions.requires_signature})</li>
    * <li>Retrieve keycloak <i>service account access token</i></li>
    * <li>Put <i>required business process start vars</i> with <i>service account access token</i>
-   * and signature to ceph</li>
+   * and signature to storage</li>
    * <li>Starts required business process with variables in return</li>
    * <li>Maps returned variables to list of required return variables defined in
    * {@code trembita.process_definitions.return_vars}</li>
@@ -96,7 +94,7 @@ public class StartBpService {
    *                                                              exception
    * @throws DsoSignatureException                                in case of facing dso or json
    *                                                              processing exception
-   * @throws CephConnectionException                              in case of facing ceph related
+   * @throws StorageConnectionException                           in case of facing storage related
    *                                                              exception
    * @throws BpmsConnectionException                              in case of facing BPMS related
    *                                                              exception
@@ -109,8 +107,8 @@ public class StartBpService {
     var bpInputParameters = getBusinessProcessInputParameters(startBpRequest, bpProperties);
     var signature = bpProperties.isRequiresSignature() ?
         getInputParamsDigitalSignature(bpInputParameters) : null;
-    var cephKey = putInputParamsToCeph(bpDefinitionKey, bpInputParameters, signature);
-    var processInstance = startProcessInstance(bpDefinitionKey, cephKey);
+    var storageKey = putInputParamsToStorage(bpDefinitionKey, bpInputParameters, signature);
+    var processInstance = startProcessInstance(bpDefinitionKey, storageKey);
     var bpOutputParameters = getBusinessProcessOutputParameters(bpProperties, processInstance);
 
     var startBpResponse = new StartBpResponse();
@@ -186,19 +184,18 @@ public class StartBpService {
   }
 
   /**
-   * Put start bp input params to ceph
+   * Put start bp input params to storage
    *
    * @param bpDefinitionKey   business process definition key
-   * @param bpInputParameters input params that has to be put to ceph
+   * @param bpInputParameters input params that has to be put to storage
    * @param signature         signature of input params
-   * @return ceph key of created document
-   * @throws CephConnectionException in case of facing ceph related exception
+   * @return storage key of created document
+   * @throws StorageConnectionException in case of facing storage related exception
    */
-  private String putInputParamsToCeph(String bpDefinitionKey, Map<String, String> bpInputParameters,
+  private String putInputParamsToStorage(String bpDefinitionKey, Map<String, String> bpInputParameters,
       String signature) {
-    log.debug("Saving input parameters for {} to Ceph - {}", bpDefinitionKey, bpInputParameters);
+    log.debug("Saving input parameters for {} to Storage - {}", bpDefinitionKey, bpInputParameters);
     var uuid = UUID.randomUUID().toString();
-    var cephKey = cephKeyProvider.generateStartFormKey(bpDefinitionKey, uuid);
 
     var formData = FormDataDto.builder()
         .accessToken(accessTokenProvider.getToken())
@@ -206,20 +203,20 @@ public class StartBpService {
         .signature(signature)
         .build();
     try {
-      formDataCephService.putFormData(cephKey, formData);
-    } catch (MisconfigurationException | CephCommunicationException e) {
-      log.error("Faced ceph error", e);
-      throw new CephConnectionException(e);
+      var key = formDataStorageService.putExternalSystemFormData(bpDefinitionKey, uuid, formData);
+      log.debug("Input parameters for {} saved in Storage", bpDefinitionKey);
+      return key;
+    } catch (RepositoryMisconfigurationException | RepositoryCommunicationException e) {
+      log.error("Faced storage error", e);
+      throw new StorageConnectionException(e);
     }
-    log.debug("Input parameters for {} saved in Ceph", bpDefinitionKey);
-    return cephKey;
   }
 
   /**
    * Starts business process and returns process instance dto with variables
    *
    * @param bpDefinitionKey business process definition key
-   * @param startFormKey    start form ceph key
+   * @param startFormKey    start form storage key
    * @return process instance dto with variables
    * @throws BpmsConnectionException in case of facing BPMS related exception
    */

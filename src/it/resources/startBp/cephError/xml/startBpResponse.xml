@@ -3,7 +3,7 @@
   <SOAP-ENV:Body>
     <SOAP-ENV:Fault>
       <faultcode>SOAP-ENV:Server</faultcode>
-      <faultstring xml:lang="en">Ceph connection runtime error</faultstring>
+      <faultstring xml:lang="en">Storage connection runtime error</faultstring>
     </SOAP-ENV:Fault>
   </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>

@@ -111,7 +111,7 @@ public class StartBpEndpointIT extends BaseIT {
     var requestEnvelope = fileSource("/startBp/cephError/xml/startBpRequest.xml");
     var responseEnvelope = fileSource("/startBp/cephError/xml/startBpResponse.xml");
     mockClient().sendRequest(withSoapEnvelope(requestEnvelope))
-        .andExpect(serverOrReceiverFault("Ceph connection runtime error"))
+        .andExpect(serverOrReceiverFault("Storage connection runtime error"))
         .andExpect(soapEnvelope(responseEnvelope));
   }
 

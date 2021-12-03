@@ -18,7 +18,6 @@ package com.epam.digital.data.platform.bpwebservice;
 
 import com.epam.digital.data.platform.bpms.client.config.FeignConfig;
 import com.epam.digital.data.platform.dso.client.DigitalSealRestClient;
-import com.epam.digital.data.platform.integration.ceph.config.CephConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -31,7 +30,7 @@ import org.springframework.ws.config.annotation.EnableWs;
 @EnableWs
 @SpringBootApplication
 @EnableFeignClients(clients = DigitalSealRestClient.class)
-@Import({CephConfig.class, FeignConfig.class})
+@Import({FeignConfig.class})
 public class BpWebserviceGatewayApplication {
 
   public static void main(String[] args) {

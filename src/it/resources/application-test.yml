@@ -40,5 +40,12 @@ ceph:
   secret-key: secret-key
   bucket: bucket
 
+s3:
+  config:
+    client:
+      protocol: http
+    options:
+      pathStyleAccess: true
+
 bpms:
   url: http://localhost:8084

@@ -29,6 +29,13 @@ ceph:
   bucketName: lowcode-form-data-storage
   host: ${CEPH_BUCKET_HOST}
 
+s3:
+  config:
+    client:
+      protocol: http
+    options:
+      pathStyleAccess: true
+
 bpmsUrl: http://bpms:8080
 dsoURL: http://digital-signature-ops:8080
 zipkinBaseUrl: http://zipkin.istio-system:9411

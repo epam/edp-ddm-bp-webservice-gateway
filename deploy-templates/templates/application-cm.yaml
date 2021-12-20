@@ -10,7 +10,7 @@ data:
     keycloak.realm: {{ template "keycloak.externalSystemTargetRealm" . }}
     keycloak.client-id: {{ .Values.keycloak.trembitaInvokerClient.clientName }}
     ceph.http-endpoint: {{ .Values.ceph.host }}
-    s3: {{ .Values.s3 | toYaml | nindent6 }}
+    s3: {{ .Values.s3 | toYaml | nindent 6 }}
     spring.zipkin.baseUrl: {{ .Values.zipkinBaseUrl }}
     {{- if eq .Values.deployProfile "dev" }}
     management.endpoints.web.exposure.include: '*'

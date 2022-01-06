@@ -29,7 +29,7 @@ import static org.springframework.ws.test.server.ResponseMatchers.noFault;
 import static org.springframework.ws.test.server.ResponseMatchers.serverOrReceiverFault;
 import static org.springframework.ws.test.server.ResponseMatchers.soapEnvelope;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class StartBpEndpointIT extends BaseIT {

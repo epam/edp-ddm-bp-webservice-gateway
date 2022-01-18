@@ -33,7 +33,10 @@ management:
       enabled: false
     kubernetes:
       enabled: false
-
+    webservices:
+      readiness:
+        services:
+          - ${keycloak.url}
 spring:
   cloud:
     discovery:

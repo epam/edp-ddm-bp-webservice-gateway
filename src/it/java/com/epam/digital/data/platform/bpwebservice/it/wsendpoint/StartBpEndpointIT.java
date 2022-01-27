@@ -30,6 +30,7 @@ import static org.springframework.ws.test.server.ResponseMatchers.serverOrReceiv
 import static org.springframework.ws.test.server.ResponseMatchers.soapEnvelope;
 
 import org.junit.jupiter.api.Test;
+import org.keycloak.admin.client.Keycloak;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class StartBpEndpointIT extends BaseIT {
@@ -97,7 +98,8 @@ public class StartBpEndpointIT extends BaseIT {
   @Test
   public void startBp_keycloakError() {
     keycloakMockServer().resetAll();
-    ReflectionTestUtils.setField(keycloak().tokenManager(), "currentToken", null);
+    var keycloak = (Keycloak) ReflectionTestUtils.getField(keycloakAdminClient, "keycloak");
+    ReflectionTestUtils.setField(keycloak.tokenManager(), "currentToken", null);
 
     var requestEnvelope = fileSource("/startBp/keycloakError/xml/startBpRequest.xml");
     var responseEnvelope = fileSource("/startBp/keycloakError/xml/startBpResponse.xml");

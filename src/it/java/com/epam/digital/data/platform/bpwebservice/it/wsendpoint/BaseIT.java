@@ -26,12 +26,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 
+import com.epam.digital.data.platform.integration.idm.client.KeycloakAdminClient;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import javax.xml.transform.Source;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.keycloak.admin.client.Keycloak;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -63,7 +63,7 @@ public abstract class BaseIT {
   @Qualifier("bpmsMockServer")
   protected WireMockServer bpmsMockServer;
   @Autowired
-  private Keycloak keycloak;
+  protected KeycloakAdminClient keycloakAdminClient;
 
   private MockWebServiceClient mockClient;
 
@@ -92,10 +92,6 @@ public abstract class BaseIT {
 
   protected WireMockServer bpmsMockServer() {
     return bpmsMockServer;
-  }
-
-  protected Keycloak keycloak() {
-    return keycloak;
   }
 
   @SneakyThrows

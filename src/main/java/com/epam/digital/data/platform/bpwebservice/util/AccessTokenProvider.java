@@ -17,9 +17,9 @@
 package com.epam.digital.data.platform.bpwebservice.util;
 
 import com.epam.digital.data.platform.bpwebservice.exception.KeycloakAuthException;
+import com.epam.digital.data.platform.integration.idm.client.KeycloakAdminClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.admin.client.Keycloak;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AccessTokenProvider {
 
-  private final Keycloak keycloak;
+  private final KeycloakAdminClient keycloakAdminClient;
 
   /**
    * @return current service account access token
@@ -38,7 +38,7 @@ public class AccessTokenProvider {
    */
   public String getToken() {
     try {
-      return keycloak.tokenManager().getAccessTokenString();
+      return keycloakAdminClient.getAccessTokenString();
     } catch (Exception e) {
       log.error("Faced keycloak error", e);
       throw new KeycloakAuthException(e);

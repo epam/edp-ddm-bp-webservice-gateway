@@ -6,7 +6,7 @@ data:
   application.yml: |-
     bpms.url: {{ .Values.bpmsUrl }}
     dso.url: {{ .Values.dsoURL }}
-    keycloak.url: {{ template "keycloak.url" . }}/auth
+    keycloak.url: {{ template "keycloak.url" . }}
     keycloak.realm: {{ template "keycloak.externalSystemTargetRealm" . }}
     keycloak.client-id: {{ .Values.keycloak.trembitaInvokerClient.clientName }}
     ceph.http-endpoint: {{ .Values.ceph.host }}

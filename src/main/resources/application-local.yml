@@ -9,7 +9,7 @@ dso:
   url: http://localhost:8081
 
 keycloak:
-  url: http://localhost:8082/auth
+  url: http://localhost:8082
   realm: test-realm
   client-id: client-id
   client-secret: client-secret

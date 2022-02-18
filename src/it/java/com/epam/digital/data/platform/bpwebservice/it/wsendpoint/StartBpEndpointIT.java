@@ -29,6 +29,7 @@ import static org.springframework.ws.test.server.ResponseMatchers.noFault;
 import static org.springframework.ws.test.server.ResponseMatchers.serverOrReceiverFault;
 import static org.springframework.ws.test.server.ResponseMatchers.soapEnvelope;
 
+import com.epam.digital.data.platform.integration.idm.client.KeycloakAdminClient;
 import org.junit.jupiter.api.Test;
 import org.keycloak.admin.client.Keycloak;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -98,7 +99,9 @@ public class StartBpEndpointIT extends BaseIT {
   @Test
   public void startBp_keycloakError() {
     keycloakMockServer().resetAll();
-    var keycloak = (Keycloak) ReflectionTestUtils.getField(keycloakAdminClient, "keycloak");
+
+    var client = (KeycloakAdminClient) ReflectionTestUtils.getField(idmService, "client");
+    var keycloak = (Keycloak) ReflectionTestUtils.getField(client, "keycloak");
     ReflectionTestUtils.setField(keycloak.tokenManager(), "currentToken", null);
 
     var requestEnvelope = fileSource("/startBp/keycloakError/xml/startBpRequest.xml");

@@ -26,7 +26,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 
-import com.epam.digital.data.platform.integration.idm.client.KeycloakAdminClient;
+import com.epam.digital.data.platform.integration.idm.service.IdmService;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import javax.xml.transform.Source;
 import lombok.SneakyThrows;
@@ -63,8 +63,7 @@ public abstract class BaseIT {
   @Qualifier("bpmsMockServer")
   protected WireMockServer bpmsMockServer;
   @Autowired
-  protected KeycloakAdminClient keycloakAdminClient;
-
+  protected IdmService idmService;
   private MockWebServiceClient mockClient;
 
   @BeforeEach

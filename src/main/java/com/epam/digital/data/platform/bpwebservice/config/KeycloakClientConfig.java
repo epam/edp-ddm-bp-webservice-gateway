@@ -16,20 +16,26 @@
 
 package com.epam.digital.data.platform.bpwebservice.config;
 
-import com.epam.digital.data.platform.integration.idm.client.KeycloakAdminClient;
-import com.epam.digital.data.platform.integration.idm.dto.KeycloakClientProperties;
-import com.epam.digital.data.platform.integration.idm.factory.IdmClientFactory;
+import com.epam.digital.data.platform.integration.idm.config.IdmClientServiceConfig;
+import com.epam.digital.data.platform.integration.idm.factory.IdmServiceFactory;
+import com.epam.digital.data.platform.integration.idm.model.KeycloakClientProperties;
+import com.epam.digital.data.platform.integration.idm.service.IdmService;
 import org.keycloak.admin.client.Keycloak;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 /**
  * Configuration class that creates {@link Keycloak} client object for connecting to keycloak
  */
 @Configuration
+@Import(IdmClientServiceConfig.class)
 public class KeycloakClientConfig {
+
+  @Autowired
+  public IdmServiceFactory idmServiceFactory;
 
   @Bean
   @ConfigurationProperties(prefix = "keycloak")
@@ -38,8 +44,8 @@ public class KeycloakClientConfig {
   }
 
   @Bean
-  public KeycloakAdminClient keycloakAdminClient(@Value("${keycloak.url}") String url,
-      KeycloakClientProperties keycloakClientProperties) {
-    return new IdmClientFactory().keycloakAdminClient(url, keycloakClientProperties);
+  public IdmService idmService(KeycloakClientProperties keycloakClientProperties) {
+    return idmServiceFactory.createIdmService(keycloakClientProperties.getRealm(),
+        keycloakClientProperties.getClientId(), keycloakClientProperties.getClientSecret());
   }
 }

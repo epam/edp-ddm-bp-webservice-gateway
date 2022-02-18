@@ -23,7 +23,7 @@
     <ddm-form-data-storage.version>1.5.2-SNAPSHOT</ddm-form-data-storage.version>
     <bpm.api.version>1.5.7-SNAPSHOT</bpm.api.version>
     <log4j.version>2.17.0</log4j.version>
-    <ddm-idm-client.version>1.5.0-SNAPSHOT</ddm-idm-client.version>
+    <ddm-idm-client.version>1.5.1-SNAPSHOT</ddm-idm-client.version>
 
     <!-- This property is set by jacoco and used in the surefire config
 			Set it to empty to avoid JVM startup error related to "@{argLine}" when run without jacoco -->

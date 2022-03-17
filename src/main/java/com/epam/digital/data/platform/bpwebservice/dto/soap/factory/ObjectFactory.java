@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.epam.digital.data.platform.bpwebservice.dto.factory;
+package com.epam.digital.data.platform.bpwebservice.dto.soap.factory;
 
 import com.epam.digital.data.platform.bpwebservice.constant.Constants;
-import com.epam.digital.data.platform.bpwebservice.dto.StartBpRequest;
+import com.epam.digital.data.platform.bpwebservice.dto.soap.StartBpSoapRequest;
 import com.epam.digital.data.platform.bpwebservice.dto.StartBpResponse;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;
@@ -38,10 +38,10 @@ import org.springframework.stereotype.Component;
 @XmlRegistry
 public class ObjectFactory {
 
-  @XmlElementDecl(namespace = Constants.NAMESPACE, name = StartBpRequest.START_BP_REQUEST_NAME)
-  public JAXBElement<StartBpRequest> createStartBpRequest(StartBpRequest value) {
-    var qName = new QName(Constants.NAMESPACE, StartBpRequest.START_BP_REQUEST_NAME);
-    return new JAXBElement<>(qName, StartBpRequest.class, null, value);
+  @XmlElementDecl(namespace = Constants.NAMESPACE, name = StartBpSoapRequest.START_BP_REQUEST_NAME)
+  public JAXBElement<StartBpSoapRequest> createStartBpRequest(StartBpSoapRequest value) {
+    var qName = new QName(Constants.NAMESPACE, StartBpSoapRequest.START_BP_REQUEST_NAME);
+    return new JAXBElement<>(qName, StartBpSoapRequest.class, null, value);
   }
 
   @XmlElementDecl(namespace = Constants.NAMESPACE, name = StartBpResponse.START_BP_RESPONSE_NAME)

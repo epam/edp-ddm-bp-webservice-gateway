@@ -1,0 +1,6 @@
+{
+  "businessProcessDefinitionKey": "bpmsError",
+  "startVariables": {
+    "var1": "value1"
+  }
+}

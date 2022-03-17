@@ -3,7 +3,13 @@ server:
 
 platform:
   security:
-    enabled: false
+    enabled: true
+    whitelist:
+      - /ws/**
+      - /swagger
+      - /v3/api-docs/**
+      - /swagger-ui/**
+      - /actuator/**
   logging:
     aspect:
       enabled: false
@@ -44,6 +50,10 @@ spring:
         health-indicator:
           enabled: false
 
+springdoc:
+  swagger-ui:
+    path: "/swagger"
+
 logbook:
   feign:
     enabled: true
@@ -52,6 +62,8 @@ logbook:
   strategy: without-body
   exclude:
     - /actuator/**
+    - /swagger/**
+    - /swagger-ui/**
   obfuscate:
     headers:
       - x-access-token

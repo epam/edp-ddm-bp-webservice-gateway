@@ -19,7 +19,7 @@ package com.epam.digital.data.platform.bpwebservice.service;
 import com.epam.digital.data.platform.bpms.client.ProcessDefinitionRestClient;
 import com.epam.digital.data.platform.bpwebservice.config.BusinessProcessProperties;
 import com.epam.digital.data.platform.bpwebservice.config.TrembitaBusinessProcessProperties;
-import com.epam.digital.data.platform.bpwebservice.dto.StartBpRequest;
+import com.epam.digital.data.platform.bpwebservice.dto.StartBpDto;
 import com.epam.digital.data.platform.bpwebservice.dto.StartBpResponse;
 import com.epam.digital.data.platform.bpwebservice.exception.BpmsConnectionException;
 import com.epam.digital.data.platform.bpwebservice.exception.DsoSignatureException;
@@ -84,7 +84,7 @@ public class StartBpService {
    * {@code trembita.process_definitions.return_vars}</li>
    * </ol>
    *
-   * @param startBpRequest dto representation of SOAP request envelope
+   * @param startBpDto dto representation of SOAP request envelope
    * @return dto representation of SOAP response envelope with result variables
    * @throws NoSuchBusinessProcessDefinedException                if no bp is defined in application
    *                                                              properties
@@ -99,12 +99,12 @@ public class StartBpService {
    * @throws BpmsConnectionException                              in case of facing BPMS related
    *                                                              exception
    */
-  public StartBpResponse startBp(StartBpRequest startBpRequest) {
-    var bpDefinitionKey = startBpRequest.getBusinessProcessDefinitionKey();
+  public StartBpResponse startBp(StartBpDto startBpDto) {
+    var bpDefinitionKey = startBpDto.getBusinessProcessDefinitionKey();
     log.info("Executing process {}", bpDefinitionKey);
 
     var bpProperties = getBusinessProcessProperties(bpDefinitionKey);
-    var bpInputParameters = getBusinessProcessInputParameters(startBpRequest, bpProperties);
+    var bpInputParameters = getBusinessProcessInputParameters(startBpDto, bpProperties);
     var signature = bpProperties.isRequiresSignature() ?
         getInputParamsDigitalSignature(bpInputParameters) : null;
     var storageKey = putInputParamsToStorage(bpDefinitionKey, bpInputParameters, signature);
@@ -128,37 +128,43 @@ public class StartBpService {
     var bpProperties = businessProcessProperties.findBusinessProcessProperties(bpDefinitionKey);
 
     if (Objects.isNull(bpProperties)) {
-      log.info("No such business process {} is defined in trembita.process_definitions",
+      var message = String.format(
+          "No such business process %s is defined in trembita.process_definitions",
           bpDefinitionKey);
-      throw new NoSuchBusinessProcessDefinedException();
+      log.info(message);
+      throw new NoSuchBusinessProcessDefinedException(message);
     }
     return bpProperties;
   }
 
   /**
-   * @param startBpRequest start business process request that contains input parameters
-   * @param bpProperties   business process properties object that contains required param names
+   * @param startBpDto   start business process request that contains input parameters
+   * @param bpProperties business process properties object that contains required param names
    * @return map that contains required business process parameters
+   *
    * @throws MissedRequiredBusinessProcessInputParameterException in case if there is missed input
    *                                                              parameter in startBpRequest
    */
-  private Map<String, String> getBusinessProcessInputParameters(StartBpRequest startBpRequest,
+  private Map<String, Object> getBusinessProcessInputParameters(
+      StartBpDto startBpDto,
       BusinessProcessProperties bpProperties) {
-    var bpDefinitionKey = startBpRequest.getBusinessProcessDefinitionKey();
+    var bpDefinitionKey = startBpDto.getBusinessProcessDefinitionKey();
     log.debug("Getting business process {} input parameters", bpDefinitionKey);
     if (Objects.isNull(bpProperties.getStartVars())) {
       return Collections.emptyMap();
     }
 
-    var bpInputParameters = new HashMap<String, String>();
-    var requestStartVars = startBpRequest.getStartVariables();
+    var bpInputParameters = new HashMap<String, Object>();
+    var requestStartVars = startBpDto.getStartVariables();
 
     bpProperties.getStartVars().forEach(startVar -> {
       if (Objects.isNull(requestStartVars) || !requestStartVars.containsKey(startVar)) {
-        log.info("No such input param {} is defined in request for {}", startVar, bpDefinitionKey);
-        throw new MissedRequiredBusinessProcessInputParameterException();
+        var message = String.format("No such input param %s is defined in request for %s", startVar,
+            bpDefinitionKey);
+        log.info(message);
+        throw new MissedRequiredBusinessProcessInputParameterException(message);
       }
-      bpInputParameters.put(startVar, startBpRequest.getStartVariables().get(startVar));
+      bpInputParameters.put(startVar, startBpDto.getStartVariables().get(startVar));
     });
     log.debug("Founded params for {} - {}", bpDefinitionKey, bpInputParameters);
     return Collections.unmodifiableMap(bpInputParameters);
@@ -167,9 +173,10 @@ public class StartBpService {
   /**
    * @param bpInputParameters data that has to be signed
    * @return signature as string
+   *
    * @throws DsoSignatureException in case of facing dso or json processing exception
    */
-  private String getInputParamsDigitalSignature(Map<String, String> bpInputParameters) {
+  private String getInputParamsDigitalSignature(Map<String, Object> bpInputParameters) {
     log.debug("Signing input params with system signature - {}", bpInputParameters);
     try {
       var data = objectMapper.writeValueAsString(bpInputParameters);
@@ -190,10 +197,11 @@ public class StartBpService {
    * @param bpInputParameters input params that has to be put to storage
    * @param signature         signature of input params
    * @return storage key of created document
+   *
    * @throws StorageConnectionException in case of facing storage related exception
    */
-  private String putInputParamsToStorage(String bpDefinitionKey, Map<String, String> bpInputParameters,
-      String signature) {
+  private String putInputParamsToStorage(String bpDefinitionKey,
+      Map<String, Object> bpInputParameters, String signature) {
     log.debug("Saving input parameters for {} to Storage - {}", bpDefinitionKey, bpInputParameters);
     var uuid = UUID.randomUUID().toString();
 
@@ -246,14 +254,14 @@ public class StartBpService {
    * @param processInstance process instance dto with all returned variables
    * @return map of required business process output parameters
    */
-  private Map<String, String> getBusinessProcessOutputParameters(
+  private Map<String, Object> getBusinessProcessOutputParameters(
       BusinessProcessProperties bpProperties, ProcessInstanceWithVariablesDto processInstance) {
     var processInstanceVars = processInstance.getVariables();
     if (Objects.isNull(bpProperties.getReturnVars()) || Objects.isNull(processInstanceVars)) {
       return Collections.emptyMap();
     }
 
-    var bpOutputParameters = new HashMap<String, String>();
+    var bpOutputParameters = new HashMap<String, Object>();
     bpProperties.getReturnVars().forEach(returnVar -> {
       var value = processInstanceVars.get(returnVar);
       bpOutputParameters.put(returnVar, Objects.isNull(value) || Objects.isNull(value.getValue())

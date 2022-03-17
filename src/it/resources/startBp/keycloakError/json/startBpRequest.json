@@ -1,0 +1,6 @@
+{
+  "businessProcessDefinitionKey": "keycloakError",
+  "startVariables": {
+    "var1": "value1"
+  }
+}

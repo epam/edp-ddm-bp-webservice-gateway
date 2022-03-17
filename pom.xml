@@ -12,7 +12,7 @@
   </parent>
 
   <artifactId>bp-webservice-gateway</artifactId>
-  <version>1.5.2-SNAPSHOT</version>
+  <version>1.5.0-MDTUDDM-8109-SNAPSHOT</version>
 
   <properties>
     <jaxb-runtime.version>2.3.2</jaxb-runtime.version>
@@ -71,6 +71,10 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-sleuth-zipkin</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-ui</artifactId>
     </dependency>
     <dependency>
       <groupId>wsdl4j</groupId>

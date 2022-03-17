@@ -44,6 +44,10 @@ spring:
         health-indicator:
           enabled: false
 
+springdoc:
+  swagger-ui:
+    path: "/swagger"
+
 logbook:
   feign:
     enabled: true
@@ -52,6 +56,8 @@ logbook:
   strategy: without-body
   exclude:
     - /actuator/**
+    - /swagger/**
+    - /swagger-ui/**
   obfuscate:
     headers:
       - x-access-token

@@ -1,0 +1,6 @@
+{
+  "businessProcessDefinitionKey": "dsoError",
+  "startVariables": {
+    "var1": "value1"
+  }
+}

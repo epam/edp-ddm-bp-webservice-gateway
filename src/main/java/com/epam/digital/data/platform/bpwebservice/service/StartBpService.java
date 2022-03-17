@@ -128,9 +128,11 @@ public class StartBpService {
     var bpProperties = businessProcessProperties.findBusinessProcessProperties(bpDefinitionKey);
 
     if (Objects.isNull(bpProperties)) {
-      log.info("No such business process {} is defined in trembita.process_definitions",
+      var message = String.format(
+          "No such business process %s is defined in trembita.process_definitions",
           bpDefinitionKey);
-      throw new NoSuchBusinessProcessDefinedException();
+      log.info(message);
+      throw new NoSuchBusinessProcessDefinedException(message);
     }
     return bpProperties;
   }
@@ -155,8 +157,10 @@ public class StartBpService {
 
     bpProperties.getStartVars().forEach(startVar -> {
       if (Objects.isNull(requestStartVars) || !requestStartVars.containsKey(startVar)) {
-        log.info("No such input param {} is defined in request for {}", startVar, bpDefinitionKey);
-        throw new MissedRequiredBusinessProcessInputParameterException();
+        var message = String.format("No such input param %s is defined in request for %s", startVar,
+            bpDefinitionKey);
+        log.info(message);
+        throw new MissedRequiredBusinessProcessInputParameterException(message);
       }
       bpInputParameters.put(startVar, startBpRequest.getStartVariables().get(startVar));
     });

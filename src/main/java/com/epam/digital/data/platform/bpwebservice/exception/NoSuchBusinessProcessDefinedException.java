@@ -31,4 +31,7 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapFault;
 )
 public class NoSuchBusinessProcessDefinedException extends RuntimeException {
 
+  public NoSuchBusinessProcessDefinedException(String message) {
+    super(message);
+  }
 }

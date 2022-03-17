@@ -21,7 +21,6 @@ import com.epam.digital.data.platform.integration.idm.factory.IdmServiceFactory;
 import com.epam.digital.data.platform.integration.idm.model.KeycloakClientProperties;
 import com.epam.digital.data.platform.integration.idm.service.IdmService;
 import org.keycloak.admin.client.Keycloak;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,9 +33,6 @@ import org.springframework.context.annotation.Import;
 @Import(IdmClientServiceConfig.class)
 public class KeycloakClientConfig {
 
-  @Autowired
-  public IdmServiceFactory idmServiceFactory;
-
   @Bean
   @ConfigurationProperties(prefix = "keycloak")
   public KeycloakClientProperties keycloakClientProperties() {
@@ -44,7 +40,8 @@ public class KeycloakClientConfig {
   }
 
   @Bean
-  public IdmService idmService(KeycloakClientProperties keycloakClientProperties) {
+  public IdmService idmService(IdmServiceFactory idmServiceFactory,
+      KeycloakClientProperties keycloakClientProperties) {
     return idmServiceFactory.createIdmService(keycloakClientProperties.getRealm(),
         keycloakClientProperties.getClientId(), keycloakClientProperties.getClientSecret());
   }

@@ -29,15 +29,16 @@ import static org.springframework.ws.test.server.ResponseMatchers.noFault;
 import static org.springframework.ws.test.server.ResponseMatchers.serverOrReceiverFault;
 import static org.springframework.ws.test.server.ResponseMatchers.soapEnvelope;
 
+import com.epam.digital.data.platform.bpwebservice.it.BaseIT;
 import com.epam.digital.data.platform.integration.idm.client.KeycloakAdminClient;
 import org.junit.jupiter.api.Test;
 import org.keycloak.admin.client.Keycloak;
 import org.springframework.test.util.ReflectionTestUtils;
 
-public class StartBpEndpointIT extends BaseIT {
+class StartBpEndpointIT extends BaseIT {
 
   @Test
-  public void startBp() {
+  void startBp() {
     mockPutCephStartForm("happyPathBusinessProcess",
         fileContent("/startBp/happyPath/json/cephContent.json").replaceAll("[ \r\n]", ""));
 
@@ -50,7 +51,7 @@ public class StartBpEndpointIT extends BaseIT {
                     .replaceAll("\\{", "\\\\{")))
             .willReturn(aResponse().withStatus(200)
                 .withHeader("Content-Type", "application/json")
-                .withBody(fileContent("/startBp/happyPath/json/startProcessBpResponse.json")))));
+                .withBody(fileContent("/startBp/happyPath/json/bpmsStartProcessBpResponse.json")))));
 
     var requestEnvelope = fileSource("/startBp/happyPath/xml/startBpRequest.xml");
     var responseEnvelope = fileSource("/startBp/happyPath/xml/startBpResponse.xml");
@@ -60,7 +61,7 @@ public class StartBpEndpointIT extends BaseIT {
   }
 
   @Test
-  public void startBp_noSuchBpIsDefined() {
+  void startBp_noSuchBpIsDefined() {
     var requestEnvelope = fileSource("/startBp/noSuchBpIsDefined/xml/startBpRequest.xml");
     var responseEnvelope = fileSource("/startBp/noSuchBpIsDefined/xml/startBpResponse.xml");
     mockClient().sendRequest(withSoapEnvelope(requestEnvelope))
@@ -69,7 +70,7 @@ public class StartBpEndpointIT extends BaseIT {
   }
 
   @Test
-  public void startBp_missedRequiredBpInputParameter() {
+  void startBp_missedRequiredBpInputParameter() {
     var requestEnvelope = fileSource(
         "/startBp/missedRequiredBpInputParameter/xml/startBpRequest.xml");
     var responseEnvelope = fileSource(
@@ -80,8 +81,8 @@ public class StartBpEndpointIT extends BaseIT {
   }
 
   @Test
-  public void startBp_dsoError() {
-    var dsoRequest = fileContent("/startBp/keycloakError/json/dsoRequest.json");
+  void startBp_dsoError() {
+    var dsoRequest = fileContent("/startBp/dsoError/json/dsoRequest.json");
     digitalSignatureMockServer().addStubMapping(stubFor(post(urlPathEqualTo("/api/eseal/sign"))
         .withRequestBody(equalToJson(dsoRequest))
         .withHeader("X-Access-Token", equalTo("token"))
@@ -97,7 +98,7 @@ public class StartBpEndpointIT extends BaseIT {
   }
 
   @Test
-  public void startBp_keycloakError() {
+  void startBp_keycloakError() {
     keycloakMockServer().resetAll();
 
     var client = (KeycloakAdminClient) ReflectionTestUtils.getField(idmService, "client");
@@ -112,7 +113,7 @@ public class StartBpEndpointIT extends BaseIT {
   }
 
   @Test
-  public void startBp_cephError() {
+  void startBp_cephError() {
     var requestEnvelope = fileSource("/startBp/cephError/xml/startBpRequest.xml");
     var responseEnvelope = fileSource("/startBp/cephError/xml/startBpResponse.xml");
     mockClient().sendRequest(withSoapEnvelope(requestEnvelope))
@@ -121,7 +122,7 @@ public class StartBpEndpointIT extends BaseIT {
   }
 
   @Test
-  public void startBp_bpmsError() {
+  void startBp_bpmsError() {
     mockPutCephStartForm("bpmsError",
         fileContent("/startBp/bpmsError/json/cephContent.json").replaceAll("[ \r\n]", ""));
 

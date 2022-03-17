@@ -31,7 +31,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class StartBpEndpointTest {
+class StartBpEndpointTest {
 
   @Mock
   private StartBpService service;
@@ -44,7 +44,7 @@ public class StartBpEndpointTest {
   private JAXBElement<StartBpResponse> startBpResponseJAXBElement;
 
   @Test
-  public void startBp() {
+  void startBp() {
     var startBpRequest = new StartBpRequest();
     var startBpResponse = new StartBpResponse();
     when(service.startBp(startBpRequest)).thenReturn(startBpResponse);

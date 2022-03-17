@@ -31,4 +31,7 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapFault;
 )
 public class MissedRequiredBusinessProcessInputParameterException extends RuntimeException {
 
+  public MissedRequiredBusinessProcessInputParameterException(String message) {
+    super(message);
+  }
 }

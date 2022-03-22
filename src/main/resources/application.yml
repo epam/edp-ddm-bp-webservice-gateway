@@ -3,7 +3,13 @@ server:
 
 platform:
   security:
-    enabled: false
+    enabled: true
+    whitelist:
+      - /ws/**
+      - /swagger
+      - /v3/api-docs/**
+      - /swagger-ui/**
+      - /actuator/**
   logging:
     aspect:
       enabled: false

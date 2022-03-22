@@ -30,6 +30,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epam.digital.data.platform.bpwebservice.it.BaseIT;
 import com.epam.digital.data.platform.integration.idm.client.KeycloakAdminClient;
 import com.epam.digital.data.platform.starter.errorhandling.dto.SystemErrorDto;
+import com.google.common.io.ByteStreams;
+import java.io.IOException;
+import java.util.Objects;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.keycloak.admin.client.Keycloak;
 import org.springframework.http.MediaType;
@@ -37,6 +41,14 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 class StartBpControllerIT extends BaseIT {
+
+  private String testUserToken;
+
+  @BeforeEach
+  void setUp() throws IOException {
+    testUserToken = new String(ByteStreams.toByteArray(Objects.requireNonNull(
+        getClass().getResourceAsStream("/testuserAccessToken.txt"))));
+  }
 
   @Test
   void startBp() throws Exception {
@@ -61,9 +73,21 @@ class StartBpControllerIT extends BaseIT {
     mockMvc.perform(MockMvcRequestBuilders.post("/api/start-bp")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
+            .header("X-Access-Token", testUserToken)
             .content(request))
         .andExpect(status().isOk())
         .andExpect(content().json(expectedResponse));
+  }
+
+  @Test
+  void startBp_unauthorized() throws Exception {
+    var request = fileContent("/startBp/happyPath/json/startBpRequest.json");
+
+    mockMvc.perform(MockMvcRequestBuilders.post("/api/start-bp")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(request))
+        .andExpect(status().isUnauthorized());
   }
 
   @Test
@@ -73,6 +97,7 @@ class StartBpControllerIT extends BaseIT {
     var responseString = mockMvc.perform(MockMvcRequestBuilders.post("/api/start-bp")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
+            .header("X-Access-Token", testUserToken)
             .content(request))
         .andExpect(status().isUnprocessableEntity())
         .andReturn()
@@ -95,6 +120,7 @@ class StartBpControllerIT extends BaseIT {
     var responseString = mockMvc.perform(MockMvcRequestBuilders.post("/api/start-bp")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
+            .header("X-Access-Token", testUserToken)
             .content(request))
         .andExpect(status().isUnprocessableEntity())
         .andReturn()
@@ -125,6 +151,7 @@ class StartBpControllerIT extends BaseIT {
     var responseString = mockMvc.perform(MockMvcRequestBuilders.post("/api/start-bp")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
+            .header("X-Access-Token", testUserToken)
             .content(request))
         .andExpect(status().isInternalServerError())
         .andReturn()
@@ -152,6 +179,7 @@ class StartBpControllerIT extends BaseIT {
     var responseString = mockMvc.perform(MockMvcRequestBuilders.post("/api/start-bp")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
+            .header("X-Access-Token", testUserToken)
             .content(request))
         .andExpect(status().isInternalServerError())
         .andReturn()
@@ -173,6 +201,7 @@ class StartBpControllerIT extends BaseIT {
     var responseString = mockMvc.perform(MockMvcRequestBuilders.post("/api/start-bp")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
+            .header("X-Access-Token", testUserToken)
             .content(request))
         .andExpect(status().isInternalServerError())
         .andReturn()
@@ -197,6 +226,7 @@ class StartBpControllerIT extends BaseIT {
     var responseString = mockMvc.perform(MockMvcRequestBuilders.post("/api/start-bp")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
+            .header("X-Access-Token", testUserToken)
             .content(request))
         .andExpect(status().isInternalServerError())
         .andReturn()

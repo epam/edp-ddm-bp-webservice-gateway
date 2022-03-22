@@ -20,6 +20,7 @@ import com.epam.digital.data.platform.bpwebservice.dto.StartBpRequest;
 import com.epam.digital.data.platform.bpwebservice.dto.StartBpResponse;
 import com.epam.digital.data.platform.bpwebservice.service.StartBpService;
 import com.epam.digital.data.platform.starter.errorhandling.dto.SystemErrorDto;
+import com.epam.digital.data.platform.starter.security.annotation.PreAuthorizeAnySystemRole;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api")
+@PreAuthorizeAnySystemRole
 @RequiredArgsConstructor
 public class StartBpController {
 

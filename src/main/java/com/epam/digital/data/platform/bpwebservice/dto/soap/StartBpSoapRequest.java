@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.epam.digital.data.platform.bpwebservice.dto;
+package com.epam.digital.data.platform.bpwebservice.dto.soap;
 
 import com.epam.digital.data.platform.bpwebservice.constant.Constants;
+import java.util.HashMap;
 import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -25,18 +26,20 @@ import javax.xml.bind.annotation.XmlType;
 import lombok.Data;
 
 /**
- * Class that represents response envelope body for startBp operation
+ * Class that represents request envelope body for startBp operation
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(
     namespace = Constants.NAMESPACE,
-    name = StartBpResponse.START_BP_RESPONSE_NAME
+    name = StartBpSoapRequest.START_BP_REQUEST_NAME
 )
 @Data
-public class StartBpResponse {
+public class StartBpSoapRequest {
 
-  public static final String START_BP_RESPONSE_NAME = "startBpResponse";
+  public static final String START_BP_REQUEST_NAME = "startBpRequest";
 
   @XmlElement(required = true)
-  private Map<String, Object> resultVariables;
+  private String businessProcessDefinitionKey;
+  @XmlElement
+  private Map<String, String> startVariables = new HashMap<>();
 }

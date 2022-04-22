@@ -6,7 +6,10 @@
       <resultVariables>
         <entry>
           <key>return_var_1</key>
-          <value>return_value_1</value>
+          <value xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">
+            return_value_1
+          </value>
         </entry>
         <entry>
           <key>return_var_2</key>

@@ -17,10 +17,12 @@
 package com.epam.digital.data.platform.bpwebservice.wsendpoint;
 
 import com.epam.digital.data.platform.bpwebservice.constant.Constants;
-import com.epam.digital.data.platform.bpwebservice.dto.StartBpRequest;
+import com.epam.digital.data.platform.bpwebservice.dto.StartBpDto;
 import com.epam.digital.data.platform.bpwebservice.dto.StartBpResponse;
-import com.epam.digital.data.platform.bpwebservice.dto.factory.ObjectFactory;
+import com.epam.digital.data.platform.bpwebservice.dto.soap.StartBpSoapRequest;
+import com.epam.digital.data.platform.bpwebservice.dto.soap.factory.ObjectFactory;
 import com.epam.digital.data.platform.bpwebservice.service.StartBpService;
+import java.util.Collections;
 import javax.xml.bind.JAXBElement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -41,17 +43,22 @@ public class StartBpEndpoint {
   /**
    * Method that is used for wsdl operation generation
    * <p>
-   * Is invoked when soap service receives {@link StartBpRequest startBpRequest} message
+   * Is invoked when soap service receives {@link StartBpSoapRequest startBpRequest} message
    * <p>
-   * Delegates an invocation to {@link StartBpService#startBp(StartBpRequest)}
+   * Delegates an invocation to {@link StartBpService#startBp(StartBpDto)}
    *
-   * @param startBpRequest received {@link StartBpRequest startBpRequest} message
+   * @param startBpSoapRequest received {@link StartBpSoapRequest startBpRequest} message
    * @return created {@link JAXBElement JAXB structure} over {@link StartBpResponse startBpResponse}
    * message that will be returned as SOAP response envelope
    */
-  @PayloadRoot(namespace = Constants.NAMESPACE, localPart = StartBpRequest.START_BP_REQUEST_NAME)
+  @PayloadRoot(namespace = Constants.NAMESPACE, localPart = StartBpSoapRequest.START_BP_REQUEST_NAME)
   @ResponsePayload
-  public JAXBElement<StartBpResponse> startBp(@RequestPayload StartBpRequest startBpRequest) {
-    return objectFactory.createStartBpResponse(service.startBp(startBpRequest));
+  public JAXBElement<StartBpResponse> startBp(
+      @RequestPayload StartBpSoapRequest startBpSoapRequest) {
+    var startBpDto = StartBpDto.builder()
+        .businessProcessDefinitionKey(startBpSoapRequest.getBusinessProcessDefinitionKey())
+        .startVariables(Collections.unmodifiableMap(startBpSoapRequest.getStartVariables()))
+        .build();
+    return objectFactory.createStartBpResponse(service.startBp(startBpDto));
   }
 }

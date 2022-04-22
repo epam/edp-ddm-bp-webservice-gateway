@@ -16,7 +16,8 @@
 
 package com.epam.digital.data.platform.bpwebservice.controller;
 
-import com.epam.digital.data.platform.bpwebservice.dto.StartBpRequest;
+import com.epam.digital.data.platform.bpwebservice.dto.rest.StartBpRestRequest;
+import com.epam.digital.data.platform.bpwebservice.dto.StartBpDto;
 import com.epam.digital.data.platform.bpwebservice.dto.StartBpResponse;
 import com.epam.digital.data.platform.bpwebservice.service.StartBpService;
 import com.epam.digital.data.platform.starter.errorhandling.dto.SystemErrorDto;
@@ -46,9 +47,9 @@ public class StartBpController {
   /**
    * Method that is used for starting business process instance
    * <p>
-   * Delegates an invocation to {@link StartBpService#startBp(StartBpRequest)}
+   * Delegates an invocation to {@link StartBpService#startBp(StartBpDto)}
    *
-   * @param startBpRequest received {@link StartBpRequest startBpRequest}
+   * @param startBpRestRequest received {@link StartBpRestRequest startBpRequest}
    * @return {@link StartBpResponse startBpResponse} from service
    */
   @PostMapping("/start-bp")
@@ -69,7 +70,11 @@ public class StartBpController {
       responseCode = "500",
       content = @Content(schema = @Schema(implementation = SystemErrorDto.class)))
   @ResponseBody
-  public StartBpResponse startBp(@RequestBody StartBpRequest startBpRequest) {
-    return service.startBp(startBpRequest);
+  public StartBpResponse startBp(@RequestBody StartBpRestRequest startBpRestRequest) {
+    var startBpDto = StartBpDto.builder()
+        .businessProcessDefinitionKey(startBpRestRequest.getBusinessProcessDefinitionKey())
+        .startVariables(startBpRestRequest.getStartVariables())
+        .build();
+    return service.startBp(startBpDto);
   }
 }

@@ -7,23 +7,23 @@
   <parent>
     <groupId>com.epam.digital.data.platform</groupId>
     <artifactId>low-code-platform-parent</artifactId>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.6.0.1</version>
     <relativePath/>
   </parent>
 
   <artifactId>bp-webservice-gateway</artifactId>
-  <version>1.5.2-SNAPSHOT</version>
+  <version>1.6.0</version>
 
   <properties>
     <jaxb-runtime.version>2.3.2</jaxb-runtime.version>
 
-    <ddm-starter-logger.version>1.5.2-SNAPSHOT</ddm-starter-logger.version>
-    <ddm-starter-actuator.version>1.5.1-SNAPSHOT</ddm-starter-actuator.version>
-    <digital-signature-ops-client.version>1.5.0-SNAPSHOT</digital-signature-ops-client.version>
-    <ddm-form-data-storage.version>1.5.2-SNAPSHOT</ddm-form-data-storage.version>
-    <bpm.api.version>1.5.8-SNAPSHOT</bpm.api.version>
+    <ddm-starter-logger.version>1.6.0.1</ddm-starter-logger.version>
+    <ddm-starter-actuator.version>1.6.0.1</ddm-starter-actuator.version>
+    <digital-signature-ops-client.version>1.6.0.1</digital-signature-ops-client.version>
+    <ddm-form-data-storage.version>1.6.0.1</ddm-form-data-storage.version>
+    <bpm.api.version>1.6.0.1</bpm.api.version>
     <log4j.version>2.17.0</log4j.version>
-    <ddm-idm-client.version>1.5.1-SNAPSHOT</ddm-idm-client.version>
+    <ddm-idm-client.version>1.6.0.1</ddm-idm-client.version>
 
     <!-- This property is set by jacoco and used in the surefire config
 			Set it to empty to avoid JVM startup error related to "@{argLine}" when run without jacoco -->

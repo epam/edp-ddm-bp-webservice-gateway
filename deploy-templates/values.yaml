@@ -43,3 +43,19 @@ zipkinBaseUrl: http://zipkin.istio-system:9411
 deployProfile: prod
 
 javaOpts: "-Xms512m -Xmx512m"
+
+kong:
+  ingressName: kong-set-timeouts
+  noPublicOidcPlugin: external-system-bp-gateway-nopublic-oidc
+  route:
+    rootPath: /api/gateway/business-process
+    proxyPath: /
+
+externalSystem:
+  service:
+    name: ext-system-api-bp-gateway
+
+############## EDP VARIABLES TEST VALUES ##############################
+namespace: name
+stageName: dev
+dnsWildcard: edp-epam.com

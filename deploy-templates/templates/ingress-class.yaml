@@ -1,0 +1,10 @@
+{{- if (contains "cicd2" .Values.dnsWildcard) }}
+{{- if not (lookup "networking.k8s.io/v1" "IngressClass" "" "kong") }}
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: kong
+spec:
+  controller: ingress-controllers.konghq.com/kong
+{{- end -}}
+{{- end }}

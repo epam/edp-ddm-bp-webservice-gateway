@@ -19,7 +19,9 @@ package com.epam.digital.data.platform.bpwebservice.interceptor;
 import com.epam.digital.data.platform.bpwebservice.util.AccessTokenProvider;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,6 +35,10 @@ public class AccessTokenRequestInterceptor implements RequestInterceptor {
 
   @Override
   public void apply(RequestTemplate template) {
-    template.header("X-Access-Token", accessTokenProvider.getToken());
+    var auth = SecurityContextHolder.getContext().getAuthentication();
+
+    var token = Objects.isNull(auth) ?
+        accessTokenProvider.getToken() : (String) auth.getCredentials();
+    template.header("X-Access-Token", token);
   }
 }

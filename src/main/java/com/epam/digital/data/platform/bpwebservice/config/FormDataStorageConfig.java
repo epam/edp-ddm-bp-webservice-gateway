@@ -2,8 +2,8 @@ package com.epam.digital.data.platform.bpwebservice.config;
 
 import com.epam.digital.data.platform.integration.ceph.config.S3ConfigProperties;
 import com.epam.digital.data.platform.integration.ceph.factory.CephS3Factory;
-import com.epam.digital.data.platform.storage.base.config.CephStorageConfiguration;
-import com.epam.digital.data.platform.storage.base.factory.StorageServiceFactory;
+import com.epam.digital.data.platform.storage.form.config.CephStorageConfiguration;
+import com.epam.digital.data.platform.storage.form.factory.StorageServiceFactory;
 import com.epam.digital.data.platform.storage.form.service.FormDataStorageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -40,7 +40,7 @@ public class FormDataStorageConfig {
 
   @Bean
   public FormDataStorageService formDataStorageService(StorageServiceFactory factory,
-      CephStorageConfiguration config) {
+                                                       CephStorageConfiguration config) {
     return factory.formDataStorageService(config);
   }
 }

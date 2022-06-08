@@ -34,24 +34,25 @@ import com.epam.digital.data.platform.dso.client.DigitalSealRestClient;
 import com.epam.digital.data.platform.dso.client.exception.BaseException;
 import com.epam.digital.data.platform.starter.errorhandling.exception.SystemException;
 import com.epam.digital.data.platform.starter.errorhandling.exception.ValidationException;
-import com.epam.digital.data.platform.storage.base.exception.RepositoryCommunicationException;
-import com.epam.digital.data.platform.storage.base.exception.RepositoryMisconfigurationException;
 import com.epam.digital.data.platform.storage.form.dto.FormDataDto;
+import com.epam.digital.data.platform.storage.form.exception.FormDataRepositoryCommunicationException;
+import com.epam.digital.data.platform.storage.form.exception.FormDataRepositoryMisconfigurationException;
 import com.epam.digital.data.platform.storage.form.service.FormDataStorageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.rest.dto.VariableValueDto;
 import org.camunda.bpm.engine.rest.dto.runtime.ProcessInstanceWithVariablesDto;
 import org.camunda.bpm.engine.rest.dto.runtime.StartProcessInstanceDto;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Service that is used for starting business-process
@@ -214,7 +215,7 @@ public class StartBpService {
       var key = formDataStorageService.putExternalSystemFormData(bpDefinitionKey, uuid, formData);
       log.debug("Input parameters for {} saved in Storage", bpDefinitionKey);
       return key;
-    } catch (RepositoryMisconfigurationException | RepositoryCommunicationException e) {
+    } catch (FormDataRepositoryMisconfigurationException | FormDataRepositoryCommunicationException e) {
       log.error("Faced storage error", e);
       throw new StorageConnectionException(e);
     }

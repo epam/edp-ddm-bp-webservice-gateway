@@ -57,7 +57,7 @@ class StartBpControllerIT extends BaseIT {
 
     bpmsMockServer.addStubMapping(stubFor(
         post(urlPathEqualTo("/api/process-definition/key/happyPathBusinessProcess/start"))
-            .withHeader("X-Access-Token", equalTo("token"))
+            .withHeader("X-Access-Token", equalTo(testUserToken))
             .withRequestBody(matching(
                 fileContent("/startBp/happyPath/json/startProcessBpRequestRegex.json")
                     .replaceAll("[ \r\n]", "")
@@ -141,7 +141,7 @@ class StartBpControllerIT extends BaseIT {
     var dsoRequest = fileContent("/startBp/dsoError/json/dsoRequest.json");
     digitalSignatureMockServer().addStubMapping(stubFor(post(urlPathEqualTo("/api/eseal/sign"))
         .withRequestBody(equalToJson(dsoRequest))
-        .withHeader("X-Access-Token", equalTo("token"))
+        .withHeader("X-Access-Token", equalTo(testUserToken))
         .willReturn(aResponse().withStatus(400)
             .withHeader("Content-Type", "application/json")
             .withBody("{\"message\":\"message\",\"localizedMessage\":\"localizedMessage\"}"))));
@@ -164,34 +164,6 @@ class StartBpControllerIT extends BaseIT {
         .hasFieldOrPropertyWithValue("code", "500")
         .hasFieldOrPropertyWithValue("localizedMessage", "localizedMessage")
         .hasFieldOrPropertyWithValue("message", "message");
-  }
-
-  @Test
-  void startBp_keycloakError() throws Exception {
-    keycloakMockServer().resetAll();
-
-    var client = (KeycloakAdminClient) ReflectionTestUtils.getField(idmService, "client");
-    var keycloak = (Keycloak) ReflectionTestUtils.getField(client, "keycloak");
-    ReflectionTestUtils.setField(keycloak.tokenManager(), "currentToken", null);
-
-    var request = fileContent("/startBp/keycloakError/json/startBpRequest.json");
-
-    var responseString = mockMvc.perform(MockMvcRequestBuilders.post("/api/start-bp")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-            .header("X-Access-Token", testUserToken)
-            .content(request))
-        .andExpect(status().isInternalServerError())
-        .andReturn()
-        .getResponse()
-        .getContentAsString();
-
-    var response = objectMapper.readValue(responseString, SystemErrorDto.class);
-    assertThat(response)
-        .hasFieldOrProperty("traceId")
-        .hasFieldOrPropertyWithValue("code", "500")
-        .hasFieldOrPropertyWithValue("localizedMessage", null)
-        .hasFieldOrPropertyWithValue("message", "Couldn't get access token, realm test-realm");
   }
 
   @Test

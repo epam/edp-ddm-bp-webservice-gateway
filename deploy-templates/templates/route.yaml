@@ -1,6 +1,8 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
+  annotations:
+    {{ template "admin-routes.whitelist.annotation" . }}
   labels:
     app: {{ .Chart.Name }}
   name: {{ .Chart.Name }}

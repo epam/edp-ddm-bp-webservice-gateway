@@ -18,6 +18,7 @@ spec:
     metadata:
       annotations:
         sidecar.istio.io/inject: "true"
+        traffic.sidecar.istio.io/excludeOutboundPorts: '6379'
       labels:
         app: {{ .Chart.Name }}
     spec:

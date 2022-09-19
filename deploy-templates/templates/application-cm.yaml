@@ -14,4 +14,6 @@ data:
     spring.zipkin.baseUrl: {{ .Values.zipkinBaseUrl }}
     {{- if eq .Values.deployProfile "dev" }}
     management.endpoints.web.exposure.include: '*'
+    {{- else }}
+    management.endpoints.web.exposure.include: 'health, prometheus'
     {{- end }}

@@ -17,3 +17,5 @@ data:
     {{- else }}
     management.endpoints.web.exposure.include: 'health, prometheus'
     {{- end }}
+    redis.endpoint : rfs-redis-sentinel.{{ .Release.Namespace }}.svc:26379
+    storage: {{ toYaml .Values.storage | nindent 6 }}

@@ -67,6 +67,11 @@ spec:
                 key: BUCKET_NAME
           - name: JAVA_OPTS
             value: {{ .Values.javaOpts }}
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.redis.secretName }}
+                key: password
         volumeMounts:
           - name: {{ .Chart.Name }}
             mountPath: {{ .Values.appConfigMountPath }}
@@ -76,6 +81,8 @@ spec:
             mountPath: {{ .Values.trembitaInvokerKeycloakClientSecretsMountPath }}
           - name: {{ .Chart.Name }}-ceph-bucket-credentials
             mountPath: {{ .Values.cephSecretMountPath }}
+          - name: {{ .Chart.Name }}-redis-credentials
+            mountPath: {{ .Values.redisSecretsMountPath }}
       serviceAccountName: {{ .Chart.Name }}
       {{- if .Values.nodeSelector }}
       nodeSelector: {{ toYaml .Values.nodeSelector | nindent 8 }}
@@ -104,3 +111,9 @@ spec:
             items:
             - key: clientSecret
               path: keycloak.client-secret
+        - name: {{ .Chart.Name }}-redis-credentials
+          secret:
+            secretName: {{ .Values.redis.secretName }}
+            items:
+              - key: password
+                path: redis.password

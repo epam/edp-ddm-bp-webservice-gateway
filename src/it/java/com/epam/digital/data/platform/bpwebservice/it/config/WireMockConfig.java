@@ -43,7 +43,7 @@ public class WireMockConfig {
 
   @Bean(destroyMethod = "stop")
   @Qualifier("cephMockServer")
-  public WireMockServer cephMockServer(@Value("${ceph.http-endpoint}") String urlStr)
+  public WireMockServer cephMockServer(@Value("${storage.backend.ceph.http-endpoint}") String urlStr)
       throws MalformedURLException {
     return WireMockUtil.createAndStartMockServerForUrl(urlStr);
   }

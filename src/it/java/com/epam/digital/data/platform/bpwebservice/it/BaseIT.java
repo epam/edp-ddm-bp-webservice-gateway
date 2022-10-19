@@ -45,6 +45,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.ws.test.server.MockWebServiceClient;
 import org.springframework.xml.transform.ResourceSource;
+import redis.embedded.RedisCluster;
 
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
@@ -73,6 +74,8 @@ public abstract class BaseIT {
   @Autowired
   protected ObjectMapper objectMapper;
   private MockWebServiceClient mockClient;
+  @Autowired
+  protected RedisCluster redisCluster;
 
   @BeforeEach
   public void init() {

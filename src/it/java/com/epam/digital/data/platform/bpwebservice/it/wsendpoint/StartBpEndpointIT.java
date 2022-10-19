@@ -113,12 +113,14 @@ class StartBpEndpointIT extends BaseIT {
   }
 
   @Test
-  void startBp_cephError() {
+  void startBp_storageError() {
+    redisCluster.stop();
     var requestEnvelope = fileSource("/startBp/cephError/xml/startBpRequest.xml");
     var responseEnvelope = fileSource("/startBp/cephError/xml/startBpResponse.xml");
     mockClient().sendRequest(withSoapEnvelope(requestEnvelope))
         .andExpect(serverOrReceiverFault("Storage connection runtime error"))
         .andExpect(soapEnvelope(responseEnvelope));
+    redisCluster.start();
   }
 
   @Test

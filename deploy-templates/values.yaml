@@ -15,6 +15,7 @@ trembitaInvokerKeycloakClientSecretsMountPath: "/app/secrets/trembita-invoker-cl
 cephSecretMountPath: "/app/secrets/ceph"
 readinessPath: "/actuator/health/readiness"
 livenessPath: "/actuator/health/liveness"
+redisSecretsMountPath: "/app/secrets/redis"
 
 ingress: # expose the service with a route or an ingress depending on platform type
   platform: openshift # openshift or kubernetes
@@ -35,6 +36,19 @@ s3:
       protocol: http
     options:
       pathStyleAccess: true
+
+storage:
+  form-data:
+    type: redis
+  backend:
+    redis:
+      password: ${REDIS_PASSWORD}
+      sentinel:
+        master: mymaster
+        nodes: ${redis.endpoint}
+
+redis:
+  secretName: redis-auth
 
 bpmsUrl: http://bpms:8080
 dsoURL: http://digital-signature-ops:8080

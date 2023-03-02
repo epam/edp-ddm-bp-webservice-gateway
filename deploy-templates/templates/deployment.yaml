@@ -55,16 +55,6 @@ spec:
             memory: 768Mi
         {{- end }}
         env:
-          - name: CEPH_BUCKET_HOST
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Values.ceph.bucketName }}
-                key: BUCKET_HOST
-          - name: ceph.bucket
-            valueFrom:
-              configMapKeyRef:
-                name: {{ .Values.ceph.bucketName }}
-                key: BUCKET_NAME
           - name: JAVA_OPTS
             value: {{ .Values.javaOpts }}
           - name: REDIS_PASSWORD
@@ -79,8 +69,6 @@ spec:
             mountPath: {{ .Values.trembitaBusinessProcessesConfigMountPath }}
           - name: {{ .Values.keycloak.trembitaInvokerClient.secretName }}
             mountPath: {{ .Values.trembitaInvokerKeycloakClientSecretsMountPath }}
-          - name: {{ .Chart.Name }}-ceph-bucket-credentials
-            mountPath: {{ .Values.cephSecretMountPath }}
           - name: {{ .Chart.Name }}-redis-credentials
             mountPath: {{ .Values.redisSecretsMountPath }}
       serviceAccountName: {{ .Chart.Name }}
@@ -97,14 +85,6 @@ spec:
         - name: {{ .Chart.Name }}-trembita-business-processes
           configMap:
             name: {{ .Chart.Name }}-trembita-business-processes
-        - name: {{ .Chart.Name }}-ceph-bucket-credentials
-          secret:
-            secretName: {{ .Values.ceph.bucketName }}
-            items:
-            - key: AWS_ACCESS_KEY_ID
-              path: ceph.access-key
-            - key: AWS_SECRET_ACCESS_KEY
-              path: ceph.secret-key
         - name: {{ .Values.keycloak.trembitaInvokerClient.secretName }}
           secret:
             secretName: {{ .Values.keycloak.trembitaInvokerClient.secretName }}

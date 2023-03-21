@@ -21,6 +21,7 @@ spec:
         traffic.sidecar.istio.io/excludeOutboundPorts: '6379'
       labels:
         app: {{ .Chart.Name }}
+        collect.logs: "json"
     spec:
       containers:
       - name: {{ .Chart.Name }}

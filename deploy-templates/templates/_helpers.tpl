@@ -35,11 +35,24 @@ app.kubernetes.io/component: app
 {{- printf "%s.%s" .Values.stageName .Values.dnsWildcard }}
 {{- end }}
 
+{{- define "trembita.whitelist.cidr" -}}
+{{- if .Values.trembita.ipList }}
+{{- $ipList := .Values.trembita.ipList }}
+{{- $cidrList := (list) }}
+{{- range $ipList }}
+{{- $cidrList = append $cidrList (printf "%s/32" .) }}
+{{- end }}
+{{- join " " $cidrList }}
+{{- end }}
+{{- end -}}
+
+{{- define "trembita.whitelist.annotation" -}}
+haproxy.router.openshift.io/ip_whitelist: {{ include "trembita.whitelist.cidr" . }}
+{{- end -}}
+
 {{- define "admin-routes.whitelist.cidr" -}}
-{{- if .Values.global }}
 {{- if .Values.global.whiteListIP }}
 {{- .Values.global.whiteListIP.adminRoutes }}
-{{- end }}
 {{- end }}
 {{- end -}}
 

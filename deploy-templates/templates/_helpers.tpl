@@ -59,3 +59,11 @@ haproxy.router.openshift.io/ip_whitelist: {{ include "trembita.whitelist.cidr" .
 {{- define "admin-routes.whitelist.annotation" -}}
 haproxy.router.openshift.io/ip_whitelist: {{ (include "admin-routes.whitelist.cidr" . | default "0.0.0.0/0") | quote }}
 {{- end -}}
+
+{{- define "horizontalPodAutoscaler.apiVersion" }}
+{{- if eq .Values.global.clusterVersion "4.9.0" }}
+{{- printf "%s" "autoscaling/v2beta2" }}
+{{- else }}
+{{- printf "%s" "autoscaling/v2" }}
+{{- end }}
+{{- end }}

@@ -7,7 +7,7 @@
 {{- end -}}
 
 {{- define "keycloak.urlPrefix" -}}
-{{- printf "%s%s%s" .Values.keycloak.url "/auth/realms/" .Release.Namespace -}}
+{{- printf "%s%s%s" .Values.keycloak.url "/realms/" .Release.Namespace -}}
 {{- end -}}
 
 {{- define "issuer.external" -}}
